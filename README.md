@@ -1,15 +1,23 @@
 # Conjurer
 
-A simple demo app that uses the [Replicate Elixir client](https://github.com/cbh123/replicate-elixir).
+A simple demo app using the [Replicate Elixir client](https://github.com/cbh123/replicate-elixir).
+
+https://github.com/cbh123/getting-started-with-replicate-elixir/assets/14149230/dba6b2a0-71f1-4838-bf97-6937e3211efe
+
 
 To start your Phoenix server:
 
   * Run `mix setup` to install and setup dependencies
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+  * Copy the `.env.example` file and make a new one called `.env`. Add your Replicate token and ngrok host.
+  * Add the Replicate config to your `config.exs`: 
+  ```
+  config :replicate,
+  replicate_api_token: System.fetch_env!("REPLICATE_API_TOKEN")
+  ```
+  * Make sure your env variables are saved with `source .env`
+  * Start the endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+Now you can visit [`localhost:4000/predictions`](http://localhost:4000/predictions) from your browser.
 
 ## Learn more
 
