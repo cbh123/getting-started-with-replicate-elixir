@@ -74,7 +74,7 @@ defmodule DemoWeb.PredictionLive.FormComponent do
           Replicate.Predictions.create(
             "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
             %{prompt: prompt},
-            "https://a889-2600-4041-5bf9-9900-a9c4-ae5f-c851-7d45.ngrok-free.app/replicate/webhooks?prediction_id=#{prediction.id}"
+            "#{System.fetch_env!("NGROK_HOST")}/replicate/webhooks?prediction_id=#{prediction.id}"
           )
 
         notify_parent({:saved, prediction})
