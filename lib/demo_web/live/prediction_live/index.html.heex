@@ -1,0 +1,54 @@
+<.header>
+  Listing Predictions
+  <:actions>
+    <.link patch={~p"/predictions/new"}>
+      <.button>New Prediction</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="predictions"
+  rows={@streams.predictions}
+  row_click={fn {_id, prediction} -> JS.navigate(~p"/predictions/#{prediction}") end}
+>
+  <:col :let={{_id, prediction}} label="Prompt"><%= prediction.prompt %></:col>
+
+  <:col :let={{_id, prediction}} label="Output">
+    <%= if is_nil(prediction.output) do %>
+      Loading...
+    <% else %>
+      <img class="h-12 w-12" src={prediction.output} />
+    <% end %>
+  </:col>
+  <:action :let={{_id, prediction}}>
+    <div class="sr-only">
+      <.link navigate={~p"/predictions/#{prediction}"}>Show</.link>
+    </div>
+    <.link patch={~p"/predictions/#{prediction}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, prediction}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: prediction.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="prediction-modal"
+  show
+  on_cancel={JS.patch(~p"/predictions")}
+>
+  <.live_component
+    module={DemoWeb.PredictionLive.FormComponent}
+    id={@prediction.id || :new}
+    title={@page_title}
+    action={@live_action}
+    prediction={@prediction}
+    patch={~p"/predictions"}
+  />
+</.modal>
