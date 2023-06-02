@@ -1,6 +1,6 @@
 # Conjurer
 
-A simple demo app using the [Replicate Elixir client](https://github.com/cbh123/replicate-elixir).
+A demo app that lets you create images using the [Replicate Elixir client](https://github.com/cbh123/replicate-elixir).
 
 https://github.com/cbh123/getting-started-with-replicate-elixir/assets/14149230/dba6b2a0-71f1-4838-bf97-6937e3211efe
 
