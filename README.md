@@ -1,4 +1,4 @@
-# Conjurer
+# 🔮 Conjurer
 
 A demo app that lets you create images using the [Replicate Elixir client](https://github.com/cbh123/replicate-elixir).
 
