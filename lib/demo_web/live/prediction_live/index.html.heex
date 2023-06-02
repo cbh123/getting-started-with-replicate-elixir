@@ -16,9 +16,9 @@
 
   <:col :let={{_id, prediction}} label="Output">
     <%= if is_nil(prediction.output) do %>
-      Loading...
+      <p class="animate-pulse">Loading...</p>
     <% else %>
-      <img class="h-12 w-12" src={prediction.output} />
+      <img class="h-36 w-36" src={prediction.output} />
     <% end %>
   </:col>
   <:action :let={{_id, prediction}}>

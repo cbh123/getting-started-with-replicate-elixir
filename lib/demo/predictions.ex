@@ -18,7 +18,7 @@ defmodule Demo.Predictions do
 
   """
   def list_predictions do
-    Repo.all(Prediction)
+    Repo.all(Prediction, order_by: [asc: :id])
   end
 
   @doc """

@@ -68,13 +68,12 @@ defmodule DemoWeb.PredictionLive.FormComponent do
   end
 
   defp save_prediction(socket, :new, %{"prompt" => prompt} = prediction_params) do
-    case Predictions.create_prediction(prediction_params)
-         |> IO.inspect(label: "creation result") do
+    case Predictions.create_prediction(prediction_params) do
       {:ok, prediction} ->
         {:ok, _prediction} =
           Replicate.Predictions.create(
             "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
-            %{prompt: "a 19th century portrait of a wombat gentleman"},
+            %{prompt: prompt},
             "https://a889-2600-4041-5bf9-9900-a9c4-ae5f-c851-7d45.ngrok-free.app/replicate/webhooks?prediction_id=#{prediction.id}"
           )
 
