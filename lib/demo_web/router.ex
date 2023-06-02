@@ -17,6 +17,7 @@ defmodule DemoWeb.Router do
   scope "/", DemoWeb do
     pipe_through :browser
 
+    live "/", PredictionLive.Index, :index
     live "/predictions", PredictionLive.Index, :index
     live "/predictions/new", PredictionLive.Index, :new
     live "/predictions/:id/edit", PredictionLive.Index, :edit

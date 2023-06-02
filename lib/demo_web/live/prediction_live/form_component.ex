@@ -70,9 +70,12 @@ defmodule DemoWeb.PredictionLive.FormComponent do
   defp save_prediction(socket, :new, %{"prompt" => prompt} = prediction_params) do
     case Predictions.create_prediction(prediction_params) do
       {:ok, prediction} ->
+        model = Replicate.Models.get!("stability-ai/stable-diffusion")
+        version = Replicate.Models.get_latest_version!(model)
+
         {:ok, _prediction} =
           Replicate.Predictions.create(
-            "stability-ai/stable-diffusion:db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf",
+            version,
             %{prompt: prompt},
             "#{System.fetch_env!("NGROK_HOST")}/replicate/webhooks?prediction_id=#{prediction.id}"
           )
