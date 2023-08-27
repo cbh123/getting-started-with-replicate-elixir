@@ -22,6 +22,13 @@ defmodule Demo.Predictions do
   end
 
   @doc """
+  Count predictions.
+  """
+  def count_predictions do
+    Repo.aggregate(Prediction, :count, :id)
+  end
+
+  @doc """
   Gets a single prediction.
 
   Raises `Ecto.NoResultsError` if the Prediction does not exist.

@@ -1,6 +1,5 @@
 defmodule ReplicateWebhooksController do
   use DemoWeb, :controller
-  alias DemoWeb.Endpoint
 
   def new(conn, params) do
     handle_webhook(conn, params)
@@ -14,8 +13,6 @@ defmodule ReplicateWebhooksController do
         conn,
         %{"status" => status, "prediction_id" => prediction_id, "output" => output} = params
       ) do
-    IO.inspect(params, label: "params")
-
     case status do
       "succeeded" ->
         prediction = Demo.Predictions.get_prediction!(prediction_id)
@@ -23,7 +20,10 @@ defmodule ReplicateWebhooksController do
         {:ok, prediction} =
           Demo.Predictions.update_prediction(prediction, %{output: output |> List.first()})
 
-        Endpoint.broadcast("predictions", "prediction:succeeded", %{prediction: prediction})
+        Phoenix.PubSub.broadcast(Demo.PubSub, "predictions", %{
+          event: "succeeded",
+          prediction: prediction
+        })
     end
   end
 end

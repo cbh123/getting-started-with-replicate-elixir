@@ -7,12 +7,16 @@ defmodule DemoWeb.PredictionLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    if connected?(socket), do: Endpoint.subscribe("predictions")
+    if connected?(socket), do: Phoenix.PubSub.subscribe(Demo.PubSub, "predictions")
     {:ok, stream(socket, :predictions, Predictions.list_predictions())}
   end
 
-  def handle_info(%{event: "prediction:succeeded", payload: payload}, socket) do
-    {:noreply, stream_insert(socket, :predictions, payload.prediction)}
+  def handle_info({DemoWeb.PredictionLive.FormComponent, {:saved, prediction}}, socket) do
+    {:noreply, stream_insert(socket, :predictions, prediction, at: 0)}
+  end
+
+  def handle_info(%{event: "succeeded", prediction: prediction}, socket) do
+    {:noreply, stream_insert(socket, :predictions, prediction, at: 0)}
   end
 
   @impl true
@@ -36,11 +40,6 @@ defmodule DemoWeb.PredictionLive.Index do
     socket
     |> assign(:page_title, "Listing Predictions")
     |> assign(:prediction, nil)
-  end
-
-  @impl true
-  def handle_info({DemoWeb.PredictionLive.FormComponent, {:saved, prediction}}, socket) do
-    {:noreply, stream_insert(socket, :predictions, prediction)}
   end
 
   @impl true

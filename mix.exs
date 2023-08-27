@@ -50,7 +50,8 @@ defmodule Demo.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:replicate, "~> 0.7.0"}
+      {:replicate, "~> 1.0.1"},
+      {:openai, "~> 0.5.2"}
     ]
   end
 

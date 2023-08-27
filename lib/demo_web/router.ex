@@ -18,12 +18,12 @@ defmodule DemoWeb.Router do
     pipe_through :browser
 
     live "/", PredictionLive.Index, :index
-    live "/predictions", PredictionLive.Index, :index
-    live "/predictions/new", PredictionLive.Index, :new
-    live "/predictions/:id/edit", PredictionLive.Index, :edit
+    live "/pattern-1", PredictionLive.Index, :index
+    live "/pattern-1/new", PredictionLive.Index, :new
+    live "/pattern-1/:id/edit", PredictionLive.Index, :edit
 
-    live "/predictions/:id", PredictionLive.Show, :show
-    live "/predictions/:id/show/edit", PredictionLive.Show, :edit
+    live "/pattern-1/:id", PredictionLive.Show, :show
+    live "/pattern-1/:id/show/edit", PredictionLive.Show, :edit
   end
 
   scope "/replicate/webhooks" do

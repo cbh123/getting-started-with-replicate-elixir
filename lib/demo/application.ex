@@ -17,7 +17,8 @@ defmodule Demo.Application do
       # Start Finch
       {Finch, name: Demo.Finch},
       # Start the Endpoint (http/https)
-      DemoWeb.Endpoint
+      DemoWeb.Endpoint,
+      Demo.Server
       # Start a worker by calling: Demo.Worker.start_link(arg)
       # {Demo.Worker, arg}
     ]
