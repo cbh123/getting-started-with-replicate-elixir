@@ -22,19 +22,22 @@ defmodule DemoWeb.PredictionLive.Index do
     {:noreply, socket |> stream_insert(:predictions, prediction, at: 0)}
   end
 
-  def handle_info({ref, {:ok, %{output: [image | _]} = prediction}}, socket) do
+  def handle_info({ref, {:ok, %{input: input, output: [image | _]} = prediction}}, socket) do
     Process.demonitor(ref, [:flush])
 
-    {:ok, prediction} =
-      prediction.input["id"]
-      |> Predictions.get_prediction!()
-      |> Predictions.update_prediction(%{output: image})
+    {:ok, prediction} = update_prediction(input["id"], image)
 
     {:noreply, socket |> stream_insert(:predictions, prediction, at: 0)}
   end
 
   def handle_info(%{event: "succeeded", prediction: prediction}, socket) do
     {:noreply, stream_insert(socket, :predictions, prediction, at: 0)}
+  end
+
+  defp update_prediction(id, image) do
+    id
+    |> Predictions.get_prediction!()
+    |> Predictions.update_prediction(%{output: image})
   end
 
   defp run_prediction(%{id: id, prompt: prompt}) do
