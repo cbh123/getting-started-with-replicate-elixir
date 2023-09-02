@@ -2,17 +2,12 @@ defmodule DemoWeb.PredictionLive.FormComponent do
   use DemoWeb, :live_component
 
   alias Demo.Predictions
-  @host System.fetch_env!("HOST")
+  alias Demo.Predictions.Prediction
 
   @impl true
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        <%= @title %>
-        <:subtitle>Use this form to manage prediction records in your database.</:subtitle>
-      </.header>
-
       <.simple_form
         for={@form}
         id="prediction-form"
@@ -22,7 +17,7 @@ defmodule DemoWeb.PredictionLive.FormComponent do
       >
         <.input field={@form[:prompt]} type="text" label="Prompt" />
         <:actions>
-          <.button phx-disable-with="Saving...">Save Prediction</.button>
+          <.button phx-disable-with="Saving...">Generate</.button>
         </:actions>
       </.simple_form>
     </div>
@@ -53,28 +48,14 @@ defmodule DemoWeb.PredictionLive.FormComponent do
     save_prediction(socket, socket.assigns.action, prediction_params)
   end
 
-  defp save_prediction(socket, :edit, prediction_params) do
-    case Predictions.update_prediction(socket.assigns.prediction, prediction_params) do
-      {:ok, prediction} ->
-        notify_parent({:saved, prediction})
-
-        {:noreply,
-         socket
-         |> put_flash(:info, "Prediction updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
-    end
-  end
-
-  defp save_prediction(socket, :new, %{"prompt" => prompt} = prediction_params) do
+  defp save_prediction(socket, _, %{"prompt" => prompt} = prediction_params) do
     case Predictions.create_prediction(prediction_params) do
       {:ok, prediction} ->
         notify_parent({:saved, prediction})
 
         {:noreply,
          socket
+         |> assign_form(Predictions.change_prediction(%Prediction{}))
          |> put_flash(:info, "Prediction created successfully")
          |> push_patch(to: socket.assigns.patch)}
 

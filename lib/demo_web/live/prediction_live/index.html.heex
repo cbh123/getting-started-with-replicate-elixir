@@ -1,11 +1,15 @@
 <.header>
   Listing Predictions
-  <:actions>
-    <.link patch={~p"/pattern-1/new"}>
-      <.button>New Prediction</.button>
-    </.link>
-  </:actions>
 </.header>
+
+<.live_component
+  module={DemoWeb.PredictionLive.FormComponent}
+  id={@prediction.id || :new}
+  title={@page_title}
+  action={@live_action}
+  prediction={@prediction}
+  patch={~p"/pattern-1"}
+/>
 
 <.table
   id="predictions"
@@ -25,7 +29,6 @@
     <div class="sr-only">
       <.link navigate={~p"/pattern-1/#{prediction}"}>Show</.link>
     </div>
-    <.link patch={~p"/pattern-1/#{prediction}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, prediction}}>
     <.link
@@ -36,19 +39,3 @@
     </.link>
   </:action>
 </.table>
-
-<.modal
-  :if={@live_action in [:new, :edit]}
-  id="prediction-modal"
-  show
-  on_cancel={JS.patch(~p"/pattern-1")}
->
-  <.live_component
-    module={DemoWeb.PredictionLive.FormComponent}
-    id={@prediction.id || :new}
-    title={@page_title}
-    action={@live_action}
-    prediction={@prediction}
-    patch={~p"/pattern-1"}
-  />
-</.modal>

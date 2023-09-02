@@ -11,41 +11,41 @@ defmodule DemoWeb.PredictionLive.Index do
   @impl true
   def mount(_params, _session, socket) do
     if connected?(socket), do: Phoenix.PubSub.subscribe(Demo.PubSub, "predictions")
-    {:ok, stream(socket, :predictions, Predictions.list_predictions()) |> assign(running: false)}
+
+    {:ok, stream(socket, :predictions, Predictions.list_predictions())}
   end
 
   def handle_info({DemoWeb.PredictionLive.FormComponent, {:saved, prediction}}, socket) do
     Task.async(fn ->
-      run_prediction(prediction)
+      %{id: prediction.id, output: Replicate.run(@model, prompt: prediction.prompt)}
     end)
 
     {:noreply, socket |> stream_insert(:predictions, prediction, at: 0)}
   end
 
-  def handle_info({ref, {:ok, %{input: input, output: [image | _]} = prediction}}, socket) do
+  def handle_info(
+        {ref, %{id: id, output: [image | _]}},
+        socket
+      ) do
     Process.demonitor(ref, [:flush])
-
-    {:ok, prediction} = update_prediction(input["id"], image)
-
-    {:noreply, socket |> stream_insert(:predictions, prediction, at: 0)}
+    {:ok, prediction} = update_prediction(id, image)
+    {:noreply, socket |> stream_insert(:predictions, prediction)}
   end
 
-  def handle_info(%{event: "succeeded", prediction: prediction}, socket) do
-    {:noreply, stream_insert(socket, :predictions, prediction, at: 0)}
+  def handle_info({ref, %{id: id, output: nil}}, socket) do
+    Process.demonitor(ref, [:flush])
+    {:ok, prediction} = update_prediction(id, "Failed")
+
+    {:noreply,
+     socket
+     |> stream_insert(:predictions, prediction)
+     |> put_flash(:error, "Prediction failed. Likely detected NSFW input. Try again")}
   end
 
   defp update_prediction(id, image) do
     id
     |> Predictions.get_prediction!()
     |> Predictions.update_prediction(%{output: image})
-  end
-
-  defp run_prediction(%{id: id, prompt: prompt}) do
-    model = Models.get!("stability-ai/stable-diffusion")
-    version = Models.get_latest_version!(model)
-    {:ok, prediction} = Replicate.Predictions.create(version, %{prompt: prompt, id: id})
-
-    Replicate.Predictions.wait(prediction)
   end
 
   @impl true
@@ -68,7 +68,7 @@ defmodule DemoWeb.PredictionLive.Index do
   defp apply_action(socket, :index, _params) do
     socket
     |> assign(:page_title, "Listing Predictions")
-    |> assign(:prediction, nil)
+    |> assign(:prediction, %Prediction{})
   end
 
   @impl true

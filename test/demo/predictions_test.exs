@@ -35,13 +35,18 @@ defmodule Demo.PredictionsTest do
       prediction = prediction_fixture()
       update_attrs = %{prompt: "some updated prompt"}
 
-      assert {:ok, %Prediction{} = prediction} = Predictions.update_prediction(prediction, update_attrs)
+      assert {:ok, %Prediction{} = prediction} =
+               Predictions.update_prediction(prediction, update_attrs)
+
       assert prediction.prompt == "some updated prompt"
     end
 
     test "update_prediction/2 with invalid data returns error changeset" do
       prediction = prediction_fixture()
-      assert {:error, %Ecto.Changeset{}} = Predictions.update_prediction(prediction, @invalid_attrs)
+
+      assert {:error, %Ecto.Changeset{}} =
+               Predictions.update_prediction(prediction, @invalid_attrs)
+
       assert prediction == Predictions.get_prediction!(prediction.id)
     end
 
