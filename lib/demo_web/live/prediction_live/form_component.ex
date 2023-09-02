@@ -2,6 +2,7 @@ defmodule DemoWeb.PredictionLive.FormComponent do
   use DemoWeb, :live_component
 
   alias Demo.Predictions
+  @host System.fetch_env!("HOST")
 
   @impl true
   def render(assigns) do
@@ -70,16 +71,6 @@ defmodule DemoWeb.PredictionLive.FormComponent do
   defp save_prediction(socket, :new, %{"prompt" => prompt} = prediction_params) do
     case Predictions.create_prediction(prediction_params) do
       {:ok, prediction} ->
-        model = Replicate.Models.get!("stability-ai/stable-diffusion")
-        version = Replicate.Models.get_latest_version!(model)
-
-        {:ok, _prediction} =
-          Replicate.Predictions.create(
-            version,
-            %{prompt: prompt},
-            "#{System.fetch_env!("NGROK_HOST")}/replicate/webhooks?prediction_id=#{prediction.id}"
-          )
-
         notify_parent({:saved, prediction})
 
         {:noreply,
@@ -96,5 +87,5 @@ defmodule DemoWeb.PredictionLive.FormComponent do
     assign(socket, :form, to_form(changeset))
   end
 
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+  defp(notify_parent(msg), do: send(self(), {__MODULE__, msg}))
 end

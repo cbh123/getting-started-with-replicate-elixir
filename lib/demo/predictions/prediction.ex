@@ -3,6 +3,7 @@ defmodule Demo.Predictions.Prediction do
   import Ecto.Changeset
 
   schema "predictions" do
+    field :uuid, :string
     field :prompt, :string
     field :output, :string
 
@@ -12,7 +13,7 @@ defmodule Demo.Predictions.Prediction do
   @doc false
   def changeset(prediction, attrs) do
     prediction
-    |> cast(attrs, [:prompt, :output])
+    |> cast(attrs, [:uuid, :prompt, :output])
     |> validate_required([:prompt])
   end
 end

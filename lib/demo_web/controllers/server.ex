@@ -5,6 +5,7 @@ defmodule Demo.Server do
   use GenServer
   alias Demo.Predictions
   import Demo.ChatSigil
+  import Logger
 
   def start_link(_opts) do
     GenServer.start_link(__MODULE__, %{})
@@ -49,6 +50,6 @@ defmodule Demo.Server do
 
   defp schedule_creation() do
     # Every 5 seconds
-    Process.send_after(self(), :create, 5000)
+    # Process.send_after(self(), :create, 5000)
   end
 end

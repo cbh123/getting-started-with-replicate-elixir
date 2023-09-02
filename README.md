@@ -9,7 +9,7 @@ To run Conjurer:
 
   * Run `mix setup` to install and setup dependencies
   * Copy the `.env.example` file and make a new one called `.env`. Add your Replicate token and ngrok host.
-  * Add the Replicate config to your `config.exs`: 
+  * Add the Replicate config to your `config.exs`:
   ```
   config :replicate,
   replicate_api_token: System.fetch_env!("REPLICATE_API_TOKEN")
@@ -17,7 +17,7 @@ To run Conjurer:
   * Make sure your env variables are saved with `source .env`
   * Start the endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000/predictions`](http://localhost:4000/predictions) from your browser.
+Now you can visit [`localhost:4000/pattern-1`](http://localhost:4000/pattern-1) from your browser.
 
 ## Learn more
 

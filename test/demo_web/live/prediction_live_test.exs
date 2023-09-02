@@ -17,19 +17,19 @@ defmodule DemoWeb.PredictionLiveTest do
     setup [:create_prediction]
 
     test "lists all predictions", %{conn: conn, prediction: prediction} do
-      {:ok, _index_live, html} = live(conn, ~p"/predictions")
+      {:ok, _index_live, html} = live(conn, ~p"/pattern-1")
 
       assert html =~ "Listing Predictions"
       assert html =~ prediction.prompt
     end
 
     test "saves new prediction", %{conn: conn} do
-      {:ok, index_live, _html} = live(conn, ~p"/predictions")
+      {:ok, index_live, _html} = live(conn, ~p"/pattern-1")
 
       assert index_live |> element("a", "New Prediction") |> render_click() =~
                "New Prediction"
 
-      assert_patch(index_live, ~p"/predictions/new")
+      assert_patch(index_live, ~p"/pattern-1/new")
 
       assert index_live
              |> form("#prediction-form", prediction: @invalid_attrs)
@@ -39,7 +39,7 @@ defmodule DemoWeb.PredictionLiveTest do
              |> form("#prediction-form", prediction: @create_attrs)
              |> render_submit()
 
-      assert_patch(index_live, ~p"/predictions")
+      assert_patch(index_live, ~p"/pattern-1")
 
       html = render(index_live)
       assert html =~ "Prediction created successfully"
@@ -47,12 +47,12 @@ defmodule DemoWeb.PredictionLiveTest do
     end
 
     test "updates prediction in listing", %{conn: conn, prediction: prediction} do
-      {:ok, index_live, _html} = live(conn, ~p"/predictions")
+      {:ok, index_live, _html} = live(conn, ~p"/pattern-1")
 
       assert index_live |> element("#predictions-#{prediction.id} a", "Edit") |> render_click() =~
                "Edit Prediction"
 
-      assert_patch(index_live, ~p"/predictions/#{prediction}/edit")
+      assert_patch(index_live, ~p"/pattern-1/#{prediction}/edit")
 
       assert index_live
              |> form("#prediction-form", prediction: @invalid_attrs)
@@ -62,7 +62,7 @@ defmodule DemoWeb.PredictionLiveTest do
              |> form("#prediction-form", prediction: @update_attrs)
              |> render_submit()
 
-      assert_patch(index_live, ~p"/predictions")
+      assert_patch(index_live, ~p"/pattern-1")
 
       html = render(index_live)
       assert html =~ "Prediction updated successfully"
@@ -70,7 +70,7 @@ defmodule DemoWeb.PredictionLiveTest do
     end
 
     test "deletes prediction in listing", %{conn: conn, prediction: prediction} do
-      {:ok, index_live, _html} = live(conn, ~p"/predictions")
+      {:ok, index_live, _html} = live(conn, ~p"/pattern-1")
 
       assert index_live |> element("#predictions-#{prediction.id} a", "Delete") |> render_click()
       refute has_element?(index_live, "#predictions-#{prediction.id}")
@@ -81,19 +81,19 @@ defmodule DemoWeb.PredictionLiveTest do
     setup [:create_prediction]
 
     test "displays prediction", %{conn: conn, prediction: prediction} do
-      {:ok, _show_live, html} = live(conn, ~p"/predictions/#{prediction}")
+      {:ok, _show_live, html} = live(conn, ~p"/pattern-1/#{prediction}")
 
       assert html =~ "Show Prediction"
       assert html =~ prediction.prompt
     end
 
     test "updates prediction within modal", %{conn: conn, prediction: prediction} do
-      {:ok, show_live, _html} = live(conn, ~p"/predictions/#{prediction}")
+      {:ok, show_live, _html} = live(conn, ~p"/pattern-1/#{prediction}")
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Prediction"
 
-      assert_patch(show_live, ~p"/predictions/#{prediction}/show/edit")
+      assert_patch(show_live, ~p"/pattern-1/#{prediction}/show/edit")
 
       assert show_live
              |> form("#prediction-form", prediction: @invalid_attrs)
@@ -103,7 +103,7 @@ defmodule DemoWeb.PredictionLiveTest do
              |> form("#prediction-form", prediction: @update_attrs)
              |> render_submit()
 
-      assert_patch(show_live, ~p"/predictions/#{prediction}")
+      assert_patch(show_live, ~p"/pattern-1/#{prediction}")
 
       html = render(show_live)
       assert html =~ "Prediction updated successfully"

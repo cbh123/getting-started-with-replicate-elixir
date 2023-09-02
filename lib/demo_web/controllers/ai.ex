@@ -1,4 +1,6 @@
 defmodule Demo.AI do
+  import Logger
+
   def parse_chat({:ok, %{choices: [%{"message" => %{"content" => content}} | _]}}) do
     {:ok, content}
   end

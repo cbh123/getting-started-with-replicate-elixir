@@ -44,6 +44,8 @@ defmodule Demo.Predictions do
   """
   def get_prediction!(id), do: Repo.get!(Prediction, id)
 
+  def get_prediction_by_uuid!(uuid), do: Repo.get_by!(Prediction, uuid: uuid)
+
   @doc """
   Creates a prediction.
 
