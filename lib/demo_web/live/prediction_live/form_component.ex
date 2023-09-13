@@ -48,7 +48,7 @@ defmodule DemoWeb.PredictionLive.FormComponent do
     save_prediction(socket, socket.assigns.action, prediction_params)
   end
 
-  defp save_prediction(socket, _, %{"prompt" => prompt} = prediction_params) do
+  defp save_prediction(socket, _, %{"prompt" => _prompt} = prediction_params) do
     case Predictions.create_prediction(prediction_params) do
       {:ok, prediction} ->
         notify_parent({:saved, prediction})
@@ -56,8 +56,7 @@ defmodule DemoWeb.PredictionLive.FormComponent do
         {:noreply,
          socket
          |> assign_form(Predictions.change_prediction(%Prediction{}))
-         |> put_flash(:info, "Prediction created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> put_flash(:info, "Prediction created successfully")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign_form(socket, changeset)}
