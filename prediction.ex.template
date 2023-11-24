@@ -1,0 +1,19 @@
+defmodule Prediction do
+  require Replicate
+
+  Application.put_env(
+    :replicate,
+    :replicate_api_token,
+    System.fetch_env!("REPLICATE_API_TOKEN")
+  )
+
+  def run do
+    output =
+      Replicate.run("{{MODEL_STRING}}",
+        inputs: {{INPUTS}}
+      )
+
+    IO.puts(output)
+    output
+  end
+end
