@@ -10,7 +10,7 @@ defmodule Prediction do
   def run do
     output =
       Replicate.run("{{MODEL_STRING}}",
-        inputs: {{INPUTS}}
+        inputs: %{{INPUTS}}
       )
 
     IO.puts(output)
