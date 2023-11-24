@@ -7,9 +7,6 @@
 # General application configuration
 import Config
 
-config :replicate,
-  replicate_api_token: System.fetch_env!("REPLICATE_API_TOKEN")
-
 config :demo,
   ecto_repos: [Demo.Repo]
 

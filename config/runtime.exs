@@ -20,6 +20,9 @@ if System.get_env("PHX_SERVER") do
   config :demo, DemoWeb.Endpoint, server: true
 end
 
+config :replicate,
+  replicate_api_token: System.fetch_env!("REPLICATE_API_TOKEN")
+
 config :openai,
   api_key: System.fetch_env!("OPENAI_API_KEY"),
   organization_key: System.fetch_env!("OPENAI_ORG"),
